@@ -100,7 +100,8 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .mlink{display:block;font-size:34px;font-weight:300;letter-spacing:-.03em;padding:6px 0;transition:transform var(--t-press) var(--ease-out)}
 
 /* ---------- hero sheet ---------- */
-.hero{position:relative;z-index:3;background:var(--ground);border-radius:0 0 var(--r-sheet) var(--r-sheet);padding:118px var(--gut) var(--gut)}
+.hero{position:relative;z-index:3;background:var(--ground);border-radius:0 0 var(--r-sheet) var(--r-sheet);padding:118px var(--gut) 0;overflow:hidden}
+/* the plane stack runs right to the sheet's rounded bottom edge, so planes leave through the curve, not a hard box line */
 .hero .head{margin-bottom:56px}
 .hero h1{font-weight:400;font-size:clamp(17px,1.6vw,20px);letter-spacing:-.01em}
 /* hero stack (after unveil.fr): photo planes stand in a diagonal line through 3D space, near at the bottom left,
