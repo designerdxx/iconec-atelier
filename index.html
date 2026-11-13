@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Iconec Atelier</title>
+<meta name="description" content="Iconec: real diamonds, worn on rotation. Wear a piece for thirty days, then choose what comes next.">
+<meta property="og:title" content="Iconec · Atelier">
+<meta property="og:description" content="Real diamonds, worn on rotation. Landing page preview.">
+<meta property="og:image" content="https://designerdxx.github.io/iconec-atelier/og.png?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://designerdxx.github.io/iconec-atelier/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<style>
+/* Iconec · Atelier landing
+   Vibe: claudetype.com — warm off-white ground, a floating pill nav, tiny pill eyebrows over small centred lines,
+   arched photographs, rounded sheets that slide over a soft gradient, very large type that inks in as you scroll,
+   a sticky segmented pill that tracks the section, a dark sheet, a photo marquee.
+   Motion follows the 12 principles (web):
+   - visitor-triggered motion (hover, press, tabs, popovers, menu) finishes ≤300ms
+   - entrances ease-out (arrive fast, settle), exits ease-in (gather, then leave)
+   - stagger ≤45ms per item; presses scale .97; overshoot only through spring curves
+   - scroll-linked motion is transform/opacity only; one focal moment at a time
+   - the photo marquee is the single linear exception (constant velocity loop, like a progress track) */
+@font-face{font-family:"Overused";src:url("OverusedGrotesk-Light.ttf") format("truetype");font-weight:300;font-display:swap}
+@font-face{font-family:"Overused";src:url("OverusedGrotesk-Roman.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Overused";src:url("OverusedGrotesk-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+
+:root{
+  --ground:#FAF9F6; --stone:#E9E8E4; --ink:#141A14; --sub:rgba(20,26,20,.58); --line:rgba(20,26,20,.12);
+  --green:#102C0B; --green-2:#1A3D13; --cream:#F3F1EC; --cream-2:rgba(243,241,236,.62); --mint:#C9EDB6;
+  --pill:rgba(233,232,228,.78);
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-in:cubic-bezier(.7,0,.84,0); --ease-io:cubic-bezier(.65,0,.35,1);
+  /* spring (stiffness ~400, damping ~30) sampled into linear(): a small overshoot then settle */
+  --spring:linear(0, .009, .035 2.1%, .141 4.4%, .723 12.9%, .938 16.7%, 1.017 20.5%, 1.043 24.5%, 1.035 28.4%, 1.007 37.3%, .997 44.5%, 1);
+  --t-press:120ms; --t-ui:220ms; --t-exit:160ms; --t-slide:300ms;
+  --stagger:45ms;
+  --r-sheet:32px; --gut:16px;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--ground)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Overused",ui-sans-serif,system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+h1,h2,h3,p,figure,ul{margin:0;padding:0}
+li{list-style:none}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:8px}
+::selection{background:var(--green);color:var(--cream)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- shared bits ---------- */
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;letter-spacing:.01em;color:var(--sub);box-shadow:inset 0 0 0 1px var(--line);background:rgba(255,255,255,.4)}
+.on-dark .tag{color:var(--cream-2);box-shadow:inset 0 0 0 1px rgba(243,241,236,.2);background:transparent}
+.lede{font-weight:400;font-size:17px;line-height:1.4;letter-spacing:-.005em;text-align:center}
+.head{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.badge{position:relative;overflow:hidden;display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:var(--mint);color:var(--green);font-size:11px;font-weight:500}
+/* ambient sheen: a soft band crosses, rests, crosses again (in-out, never linear) */
+.badge::after{content:"";position:absolute;inset:0 auto 0 -40%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);animation:sheen 3.6s var(--ease-io) 1.6s infinite}
+@keyframes sheen{0%{transform:translateX(0)}40%,100%{transform:translateX(360%)}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;font-weight:500;font-size:14.5px;white-space:nowrap;background:var(--ink);color:var(--ground);transition:background-color var(--t-ui) var(--ease-out),transform var(--t-press) var(--ease-out)}
+.btn:hover{background:#2A322A}
+.btn.cream{background:var(--cream);color:var(--green)}
+.btn.cream:hover{background:#fff}
+.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px currentColor}
+.btn.ghost:hover{background:rgba(243,241,236,.08)}
+.btn svg{width:17px;height:17px;flex:none}
+.btn:active,.seg button:active,.plus:active,.nav a:active,.nav button:active,.mlink:active,.msheet .x:active,.pop a:active,.legal a:active{transform:scale(.97)}
+.msheet .x,.pop a,.legal a{display:inline-flex;transition:transform var(--t-press) var(--ease-out)}
+
+/* ---------- floating pill nav ---------- */
+.nav{position:fixed;z-index:50;top:calc(14px + env(safe-area-inset-top,0px));left:50%;width:min(612px,calc(100% - 24px));height:46px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 8px;border-radius:999px;background:var(--pill);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);transform:translate(-50%,0);transition:background-color .3s var(--ease-out),color .3s var(--ease-out)}
+.nav.dark{background:rgba(16,44,11,.66);color:var(--cream)}
+.nav .side{display:flex;gap:2px}
+.nav .side.r{justify-content:flex-end}
+.nav a,.nav button{display:inline-flex;align-items:center;height:34px;padding:0 12px;border-radius:999px;font-size:13.5px;transition:background-color var(--t-ui) var(--ease-out),transform var(--t-press) var(--ease-out)}
+.nav a:hover,.nav button:hover{background:rgba(20,26,20,.06)}
+.nav.dark a:hover,.nav.dark button:hover{background:rgba(243,241,236,.1)}
+.word{font-weight:500;font-size:17px;letter-spacing:.2em;padding-left:.2em}
+.nav .menu-btn{display:none}
+.nav .app{background:var(--ink);color:var(--ground)}
+.nav .app:hover{background:#2A322A!important}
+.nav.dark .app{background:var(--cream);color:var(--green)}
+.nav.dark .app:hover{background:#fff!important}
+@media (max-width:640px){.nav .side.l a{display:none}.nav .menu-btn{display:inline-flex}.nav .side.r a:not(.app){display:none}}
+
+/* mobile menu: sheet + scrim (dims what sits behind), enter ease-out 280ms, exit ease-in 200ms */
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(20,26,20,.32);opacity:0;pointer-events:none;transition:opacity 200ms var(--ease-in)}
+.msheet{position:fixed;z-index:61;left:12px;right:12px;top:12px;padding:72px 24px 28px;border-radius:28px;background:var(--ground);transform:translateY(-12px) scale(.98);opacity:0;pointer-events:none;transition:transform 200ms var(--ease-in),opacity 200ms var(--ease-in)}
+.menu-open .scrim{opacity:1;pointer-events:auto;transition:opacity 280ms var(--ease-out)}
+.menu-open .msheet{transform:none;opacity:1;pointer-events:auto;transition:transform 280ms var(--ease-out),opacity 280ms var(--ease-out)}
+.msheet .x{position:absolute;top:18px;right:18px;width:40px;height:40px;border-radius:999px;display:grid;place-items:center;background:var(--stone)}
+.mlink{display:block;font-size:34px;font-weight:300;letter-spacing:-.03em;padding:6px 0;transition:transform var(--t-press) var(--ease-out)}
+
+/* ---------- hero sheet ---------- */
+.hero{position:relative;z-index:3;background:var(--ground);border-radius:0 0 var(--r-sheet) var(--r-sheet);padding:118px var(--gut) var(--gut)}
+.hero .head{margin-bottom:56px}
+.hero h1{font-weight:400;font-size:clamp(17px,1.6vw,20px);letter-spacing:-.01em}
+/* hero stack (after unveil.fr): photo planes stand in a diagonal line through 3D space, near at the bottom left,
+   far at the top right. They glide forward slowly, and faster as you scroll or drag; a plane fades in at the far end
+   and out as it passes you, so the line never ends. Each plane is a little translucent with a frosted edge.
+   Transform/opacity only; hover lifts a plane toward you in 220ms. */
+.stack{--pw:clamp(220px,23vw,360px);position:relative;margin:0 calc(-1 * var(--gut));height:clamp(520px,74vh,820px);overflow:hidden;perspective:1500px;perspective-origin:50% 40%;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.stack.drag{cursor:grabbing}
+.plane{position:absolute;left:50%;top:50%;width:var(--pw);aspect-ratio:4/5;margin:calc(var(--pw) * -.625) 0 0 calc(var(--pw) * -.5);will-change:transform,opacity}
+.plane figure{position:relative;width:100%;height:100%;overflow:hidden;border-radius:4px;background:var(--stone);opacity:.94;box-shadow:0 30px 60px -40px rgba(20,26,20,.35);transition:transform 220ms var(--ease-out),opacity 220ms var(--ease-out)}
+.plane figure::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(118deg,rgba(255,255,255,.5),rgba(255,255,255,0) 38%,rgba(255,255,255,0) 70%,rgba(255,255,255,.28));mix-blend-mode:screen}
+.plane:hover figure{transform:translate3d(-10px,-10px,0);opacity:1}
+.plane img{width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+@media (max-width:760px){.stack{--pw:48vw;height:clamp(440px,70vh,620px);perspective:900px}.hero .head{margin-bottom:24px}.hero{padding-top:96px}}
+.frame img{width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+
+/* load sequence (not visitor-triggered, so it may take longer than 300ms; still ease-out, 45ms stagger) */
+.js .ld{opacity:0;transform:translateY(10px)}
+.js .ld-nav{opacity:0;transform:translate(-50%,-10px)}
+.js .ld-img{opacity:0}
+.js .ld-img img{transform:scale(1.08);filter:blur(16px) grayscale(1) brightness(1.18)}
+.loaded .ld,.loaded .ld-nav{opacity:1;transform:translate(0,0);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);transition-delay:calc(var(--i,0) * var(--stagger))}
+.loaded .ld-nav{transform:translate(-50%,0)}
+.loaded .ld-img{opacity:1;transition:opacity .8s var(--ease-out) calc(220ms + var(--i,0)*var(--stagger))}
+.loaded .ld-img img{transform:none;filter:none;transition:transform 1.6s var(--ease-out) calc(220ms + var(--i,0)*var(--stagger)),filter 1.4s var(--ease-out) calc(220ms + var(--i,0)*var(--stagger))}
+.done .ld-img img{transition:none}
+
+/* ---------- terms: three plain numbers on stone, tucked under the hero's rounded edge ---------- */
+.terms{position:relative;z-index:1;background:var(--stone);margin-top:calc(-1 * var(--r-sheet));padding:calc(var(--r-sheet) + 104px) var(--gut) 136px}
+.terms+.sheet{margin-top:calc(-1 * var(--r-sheet))}
+.terms .head{margin-bottom:clamp(56px,7vw,88px)}
+.terms h2{font-weight:400;font-size:clamp(17px,1.6vw,20px);line-height:1.35;letter-spacing:-.01em}
+.trow{display:grid;grid-template-columns:repeat(3,1fr);max-width:1080px;margin:0 auto}
+.trow li{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 16px;text-align:center}
+.trow li+li{box-shadow:inset 1px 0 0 var(--line)}
+.trow b{font-weight:300;font-size:clamp(72px,9vw,140px);line-height:.9;letter-spacing:-.05em}
+.trow span{font-size:15px;color:var(--sub);max-width:200px}
+@media (max-width:760px){.trow{grid-template-columns:1fr;gap:0}.trow li{padding:28px 0}.trow li+li{box-shadow:inset 0 1px 0 var(--line)}}
+
+/* ---------- sheets ---------- */
+.sheet{position:relative;z-index:2;border-radius:var(--r-sheet) var(--r-sheet) 0 0;background:var(--ground);margin-top:-1px}
+.sheet.stone{background:var(--stone);border-radius:0}
+.sheet.dark{background:var(--green);color:var(--cream);border-radius:var(--r-sheet)}
+
+/* inking type: each letter's opacity is scrubbed by scroll (compositor only) */
+.specimen{padding:44px var(--gut) 40px}
+.specimen .head{margin-bottom:clamp(40px,7vw,96px)}
+.giant{font-weight:300;font-size:clamp(64px,15.4vw,236px);line-height:.86;letter-spacing:-.065em;text-align:center}
+.giant .ln{display:block;white-space:nowrap}
+@media (max-width:640px){.specimen .giant{font-size:22vw}}
+[data-ink] .c{opacity:.2;will-change:opacity}
+[data-ink] .w{display:inline-block;white-space:nowrap}
+
+/* steps */
+.steps{position:relative;padding:40px var(--gut) var(--gut)}
+.seg{position:relative;display:flex;padding:4px;border-radius:999px;background:rgba(233,232,228,.88)}
+.seg button{position:relative;z-index:1;height:44px;min-width:96px;padding:0 20px;border-radius:999px;font-size:14px;color:var(--sub);transition:color var(--t-ui) var(--ease-out),transform var(--t-press) var(--ease-out)}
+.seg button[aria-current="true"]{color:var(--ink)}
+.seg .thumb{position:absolute;top:4px;left:0;height:44px;border-radius:999px;background:rgba(20,26,20,.09);transition:transform var(--t-slide) var(--ease-out),width var(--t-slide) var(--ease-out)}
+.on-dark .seg{background:rgba(243,241,236,.08)}
+.on-dark .seg button{color:var(--cream-2)}
+.on-dark .seg button[aria-current="true"]{color:var(--cream)}
+.on-dark .seg .thumb{background:rgba(243,241,236,.14)}
+.step+.step{padding-top:var(--gut)}
+.frame{position:relative;overflow:hidden;border-radius:24px;height:min(92svh,920px);background:var(--stone)}
+.frame .par{position:absolute;inset:-6% 0;will-change:transform}
+.frame .par img{height:100%}
+.cap{position:absolute;z-index:1;left:20px;bottom:20px;right:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;color:#fff;pointer-events:none}
+/* caption backing: a blurred, darkened band that fades upward, so white text reads over any photo */
+.cap::before{content:"";position:absolute;inset:-180px -20px -20px;z-index:-1;border-radius:0 0 24px 24px;background:linear-gradient(rgba(10,14,10,0),rgba(10,14,10,.55));-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);-webkit-mask-image:linear-gradient(transparent,#000 60%);mask-image:linear-gradient(transparent,#000 60%)}
+.cap h3{font-weight:300;font-size:clamp(34px,4.4vw,64px);line-height:.95;letter-spacing:-.045em}
+.cap p{max-width:300px;font-size:15px;line-height:1.4;text-align:right}
+@media (max-width:640px){.cap{flex-direction:column;align-items:flex-start}.cap p{text-align:left}.seg button{min-width:0;padding:0 16px}}
+
+/* collage: arches, ovals, rectangles at different scroll speeds */
+.collage{padding:110px var(--gut) 140px}
+.collage .head{margin-bottom:72px}
+.grid{display:grid;grid-template-columns:1fr 2fr 1fr;gap:var(--gut);align-items:start}
+.col{display:flex;flex-direction:column;gap:var(--gut)}
+.col.mid{padding-top:80px}
+.col.r{padding-top:180px}
+.item{position:relative}
+.item .frame{height:auto}
+.shape-arch{border-radius:999px 999px 0 0!important}
+.shape-oval{border-radius:50%!important}
+.shape-rect{border-radius:4px!important}
+.ar-34{aspect-ratio:3/4}.ar-45{aspect-ratio:4/5}.ar-23{aspect-ratio:2/3}
+.item figcaption{margin-top:10px;font-size:12.5px;color:var(--sub);text-align:center}
+@media (max-width:760px){.grid{grid-template-columns:1fr 1fr}.col.mid{grid-column:1/-1;order:-1;padding-top:0}.col.r{padding-top:60px}}
+
+/* collage pieces surface like a stone catching light: the frame rises and grows from a soft blur (ease-out),
+   the photo inside settles from a slight zoom, one glint crosses the piece, then the + button arrives.
+   Scroll-triggered, not visitor-triggered; 45ms apart in reading order. Parallax lives on the figure,
+   so the reveal runs on the frame inside it and the two never fight over transform. */
+.js .magic .frame{opacity:.12;transform:translateY(72px) scale(.86);filter:blur(14px);transform-origin:50% 100%}
+.js .magic .frame img{transform:scale(1.22)}
+.js .magic .plus{opacity:0;transform:scale(.6);pointer-events:none}
+.js .magic figcaption{opacity:.25;transform:translateY(8px)}
+.magic .frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 38%,rgba(255,255,255,.34) 50%,transparent 62%);mix-blend-mode:screen;transform:translateX(-130%)}
+.magic.in{--d:calc(var(--i,0) * var(--stagger))}
+.magic.in .frame{opacity:1;transform:none;filter:blur(0);transition:opacity .8s var(--ease-out) var(--d),transform 1.25s var(--ease-out) var(--d),filter 1s var(--ease-out) var(--d)}
+.magic.in .frame img{transform:none;transition:transform 1.7s var(--ease-out) var(--d)}
+.magic.in .frame::after{animation:glint 1.2s var(--ease-io) calc(var(--d) + .5s) both}
+.magic.in .plus{opacity:1;transform:none;pointer-events:auto;transition:opacity .3s var(--ease-out) calc(var(--d) + .85s),transform .3s var(--ease-out) calc(var(--d) + .85s)}
+.magic.in figcaption{opacity:1;transform:none;transition:opacity .6s var(--ease-out) calc(var(--d) + .7s),transform .6s var(--ease-out) calc(var(--d) + .7s)}
+.magic.settled .plus{transition:transform var(--t-press) var(--ease-out),background-color var(--t-ui) var(--ease-out)}
+.magic.settled .frame,.magic.settled .frame img{filter:none;transition:none}
+@keyframes glint{from{transform:translateX(-130%)}to{transform:translateX(130%)}}
+
+/* scroll-in rise (membership numbers): ease-out, 45ms stagger */
+.js .rise{opacity:.35;transform:translateY(56px)}
+.rise.in{opacity:1;transform:none;transition:opacity .9s var(--ease-out),transform 1.1s var(--ease-out);transition-delay:calc(var(--i,0) * var(--stagger))}
+
+/* + button and its popover tag */
+.plus{position:absolute;z-index:3;left:14px;bottom:14px;width:32px;height:32px;border-radius:999px;display:grid;place-items:center;background:rgba(250,249,246,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);transition:transform var(--t-press) var(--ease-out),background-color var(--t-ui) var(--ease-out)}
+.plus svg{width:14px;height:14px;transition:transform var(--t-ui) var(--ease-out)}
+.plus:hover{background:#fff}
+.plus[aria-expanded="true"] svg{transform:rotate(45deg)}
+.shape-oval~.plus,.shape-arch~.plus{left:50%;margin-left:-16px}
+.pop{position:absolute;z-index:4;left:14px;bottom:56px;width:min(240px,calc(100% - 28px));padding:14px 16px;border-radius:16px;color:#fff;background:rgba(18,22,18,.42);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 12px 32px -12px rgba(10,14,10,.4);transform-origin:20px 100%;opacity:0;transform:translateY(4px) scale(.96);pointer-events:none;transition:opacity var(--t-exit) var(--ease-in),transform var(--t-exit) var(--ease-in)}
+.shape-oval~.pop,.shape-arch~.pop{left:50%;margin-left:-120px;transform-origin:50% 100%}
+.pop.open{opacity:1;transform:none;pointer-events:auto;transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out)}
+.pop b{display:block;font-weight:500;font-size:14.5px}
+.pop span{display:block;font-size:13px;color:rgba(255,255,255,.74);margin-top:2px}
+.pop .ct{margin-top:8px;font-size:13px;font-weight:500}
+.pop a{display:inline-flex;margin-top:10px;font-size:13px;font-weight:500;opacity:.9;transition:opacity var(--t-ui) var(--ease-out),transform var(--t-press) var(--ease-out)}
+.pop a:hover{opacity:1}
+
+/* dark sheet: plans */
+.dark-wrap{position:relative;z-index:2;background:var(--stone);padding:0}
+.plans{padding:100px var(--gut) 40px;text-align:center}
+.plans .giant{font-size:clamp(56px,12.6vw,196px)}
+.plans .head{margin-bottom:clamp(40px,6vw,80px)}
+.price{margin:56px 0 0;display:flex;flex-direction:column;align-items:center;gap:22px}
+.price .seg{transform:none}
+.amt{font-weight:300;font-size:clamp(56px,7vw,96px);letter-spacing:-.05em;line-height:1}
+.amt small{font-size:15px;letter-spacing:0;color:var(--cream-2);margin-left:8px;font-weight:400}
+.amt .v{display:inline-flex;vertical-align:top}
+/* price digits: a changed digit hands over to the next one with a short slide and fade; unchanged digits stay still */
+.dg{display:inline-grid;vertical-align:top}
+.dg b{grid-area:1/1;font-weight:inherit;will-change:transform,opacity}
+.facts{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.facts li{height:30px;display:inline-flex;align-items:center;padding:0 12px;border-radius:999px;font-size:13px;color:var(--cream-2);box-shadow:inset 0 0 0 1px rgba(243,241,236,.18)}
+.ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:40px;padding-bottom:60px}
+
+/* marquee (constant velocity: the one linear motion on the page) */
+.marquee{position:relative;z-index:2;overflow:hidden;padding:var(--gut) 0;background:var(--stone)}
+.track{display:flex;gap:var(--gut);width:max-content;animation:mq 60s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track figure{width:clamp(200px,22vw,320px);aspect-ratio:3/4;border-radius:4px;overflow:hidden;flex:none}
+.track figure:nth-child(3n+2){border-radius:999px 999px 0 0}
+.track img{width:100%;height:100%;object-fit:cover}
+@keyframes mq{to{transform:translateX(calc(-50% - var(--gut)/2))}}
+
+/* ---------- get the app: one centred line, one action, one photograph. The photo sits in a wide arch that
+   opens from the middle as it scrolls into view (clip-path inset scrubbed by scroll, the photo settling from
+   a slight zoom), then rests flush with the sheet's bottom edge. That opening is the section's only motion. ---------- */
+.appw{position:relative;z-index:2;background:var(--stone);padding:var(--gut) var(--gut) 0}
+.app-sheet{border-radius:var(--r-sheet);background:var(--ground);padding:clamp(88px,10vw,136px) clamp(16px,4vw,56px) 0;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden}
+.app-sheet h2{font-weight:300;font-size:clamp(44px,5.6vw,84px);line-height:.98;letter-spacing:-.03em;text-wrap:balance}
+.app-sheet .lead{margin-top:20px;max-width:40ch;text-wrap:pretty;color:var(--sub);font-size:17px;line-height:1.45}
+.app-get{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:36px}
+.qr{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--sub);line-height:1.35;text-align:left}
+.qr img{width:56px;height:56px;border-radius:8px;background:#fff;padding:4px;box-shadow:0 1px 2px rgba(20,26,20,.08)}
+@media (max-width:860px){.qr{display:none}}
+.window{position:relative;width:min(1180px,100%);aspect-ratio:2/1;margin-top:clamp(64px,8vw,104px);overflow:hidden;border-radius:999px 999px 0 0;background:var(--stone);--o:0;clip-path:inset(0 calc(var(--o) * 1%) 0 calc(var(--o) * 1%) round 999px 999px 0 0)}
+.window img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(calc(1 + var(--o) * .004));will-change:transform}
+@media (max-width:640px){.window{aspect-ratio:4/5}}
+
+/* ---------- FAQ: plain rows; open eases out in 260ms, close eases in 200ms ---------- */
+.faq{position:relative;z-index:2;background:var(--stone);padding:120px var(--gut) 40px}
+.faq .head{margin-bottom:48px}
+.faq-list{max-width:760px;margin:0 auto}
+.faq details{box-shadow:inset 0 -1px 0 var(--line)}
+.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:22px 0;cursor:pointer;font-size:18px;letter-spacing:-.01em;transition:opacity var(--t-ui) var(--ease-out)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{opacity:.7}
+.faq summary i{position:relative;flex:none;width:14px;height:14px;transition:transform var(--t-ui) var(--ease-out)}
+.faq summary i::before,.faq summary i::after{content:"";position:absolute;left:0;top:6.25px;width:14px;height:1.5px;border-radius:1px;background:currentColor}
+.faq summary i::after{transform:rotate(90deg)}
+.faq details[open] summary i{transform:rotate(45deg)}
+.faq details p{padding:0 48px 24px 0;color:var(--sub);font-size:15.5px;line-height:1.55;max-width:620px}
+@supports selector(::details-content){
+  :root{interpolate-size:allow-keywords}
+  .faq details::details-content{block-size:0;overflow:hidden;opacity:0;transition:block-size 200ms var(--ease-in),opacity 160ms var(--ease-in),content-visibility 200ms allow-discrete}
+  .faq details[open]::details-content{block-size:auto;opacity:1;transition:block-size 260ms var(--ease-out),opacity 260ms var(--ease-out),content-visibility 260ms allow-discrete}
+}
+
+/* footer */
+.foot{position:relative;z-index:2;background:var(--stone);padding:96px var(--gut) 0;overflow:hidden}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut);max-width:1100px;margin:0 auto}
+.card{border-radius:24px;background:var(--ground);padding:28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.card .frame{width:min(220px,60%);height:auto;aspect-ratio:3/4}
+.card h3{font-weight:400;font-size:22px;letter-spacing:-.02em;line-height:1.15}
+.card p{color:var(--sub);font-size:14px;max-width:300px}
+.field{display:flex;gap:6px;width:100%;max-width:340px;padding:4px;border-radius:999px;background:var(--stone)}
+.field input{flex:1;min-width:0;border:0;background:transparent;padding:0 14px;height:44px;outline:none;font-size:14.5px}
+.field .btn{height:44px}
+.field:focus-within{box-shadow:0 0 0 2px var(--green)}
+.form-msg{min-height:20px;font-size:13px;color:var(--sub)}
+@media (max-width:760px){.cards{grid-template-columns:1fr}}
+.bigword{display:flex;justify-content:center;margin-top:72px;font-weight:500;font-size:clamp(64px,19vw,300px);letter-spacing:.06em;line-height:.8;overflow:hidden;padding-top:.06em;padding-left:.06em}
+.bigword span{display:inline-block}
+.js .bigword span{transform:translateY(45%)}
+.bigword.in span{transform:none;transition:transform 1.1s var(--ease-out);transition-delay:calc(var(--i) * var(--stagger))}
+.legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:24px 0 max(28px,env(safe-area-inset-bottom));font-size:12.5px;color:var(--sub)}
+.legal nav{display:flex;gap:18px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:1ms!important;transition-delay:0ms!important}
+  .js .ld,.js .ld-img,.js .rise,.js .magic .frame,.js .magic .plus,.js .magic figcaption{opacity:1;transform:none;filter:none;pointer-events:auto}
+  .js .magic .frame img{transform:none}
+  .js .ld-nav{opacity:1;transform:translate(-50%,0)}
+  .js .ld-img img{transform:none;filter:none}
+  .js .bigword span{transform:none}
+  [data-ink] .c{opacity:1!important}
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<header class="nav ld-nav" id="nav">
+  <div class="side l">
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>Menu</button>
+    <a href="#pieces">Pieces</a>
+    <a href="#how">How it works</a>
+  </div>
+  <a href="#top" class="word" aria-label="Iconec, back to top">ICONEC</a>
+  <div class="side r">
+    <a href="#plans">Plans</a>
+    <a href="#app" class="app">Get the app</a>
+  </div>
+</header>
+
+<div class="scrim" data-menu-close></div>
+<div class="msheet" id="menu" role="dialog" aria-modal="true" aria-label="Menu" inert>
+  <button class="x" type="button" aria-label="Close menu" data-menu-close><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg></button>
+  <a class="mlink" href="#pieces" data-menu-close>Pieces</a>
+  <a class="mlink" href="#how" data-menu-close>How it works</a>
+  <a class="mlink" href="#plans" data-menu-close>Plans</a>
+  <a class="mlink" href="#gift" data-menu-close>Gift</a>
+</div>
+
+<main id="top">
+  <!-- hero sheet -->
+  <section class="hero" aria-labelledby="h-hero">
+    <div class="head">
+      <span class="tag ld" style="--i:1">Diamond membership</span>
+      <h1 id="h-hero" class="ld" style="--i:2">Real diamonds, worn on rotation</h1>
+    </div>
+    <div class="stack" data-stack aria-roledescription="carousel" aria-label="Pieces on rotation, scroll or drag to move through them">
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="1 of 12"><figure><img src="step-swap.jpg" alt="A diamond solitaire ring held up to the light" draggable="false" fetchpriority="high"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="2 of 12"><figure><img src="member-c.jpg" alt="A member wearing diamond drop earrings" draggable="false" fetchpriority="high"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="3 of 12"><figure><img src="piece-pendant.jpg" alt="A leaf diamond pendant on dark slate" draggable="false" fetchpriority="high"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="4 of 12"><figure><img src="member-dana.jpg" alt="A member wearing gold hoops and rings" draggable="false" fetchpriority="high"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="5 of 12"><figure><img src="piece-earrings.jpg" alt="Diamond drop earrings on slate" draggable="false" fetchpriority="high"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="6 of 12"><figure><img src="member-reem.jpg" alt="A member wearing layered diamond necklaces" draggable="false" fetchpriority="high"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="7 of 12"><figure><img src="piece-ring.jpg" alt="A knot diamond ring on slate" draggable="false"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="8 of 12"><figure><img src="member-b.jpg" alt="A member wearing a fine diamond chain" draggable="false"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="9 of 12"><figure><img src="piece-riviere.jpg" alt="A diamond rivière necklace on slate" draggable="false"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="10 of 12"><figure><img src="member-mariam.jpg" alt="Hands wearing diamond rings" draggable="false"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="11 of 12"><figure><img src="member-aisha.jpg" alt="A member wearing a gold pendant and ring" draggable="false"></figure></div>
+      <div class="plane" role="group" aria-roledescription="slide" aria-label="12 of 12"><figure><img src="member-fatima.jpg" alt="A member wearing layered gold chains" draggable="false"></figure></div>
+    </div>
+  </section>
+
+  <!-- terms -->
+  <section class="terms" aria-labelledby="h-terms">
+    <div class="head">
+      <span class="tag">Membership</span>
+      <h2 id="h-terms">Wear it for thirty days,<br>then choose what comes next</h2>
+    </div>
+    <ul class="trow">
+      <li class="rise" style="--i:0"><b class="num">30</b><span>days with each piece</span></li>
+      <li class="rise" style="--i:1"><b class="num">+30</b><span>more days if you want to keep it</span></li>
+      <li class="rise" style="--i:2"><b class="num">3</b><span>pieces at a time, at most</span></li>
+    </ul>
+  </section>
+
+  <!-- specimen sheet + how it works -->
+  <section class="sheet" id="how" aria-labelledby="h-spec">
+    <div class="specimen">
+      <div class="head">
+        <span style="display:inline-flex;gap:8px;align-items:center"><span style="font-size:17px">How it works</span><span class="badge">3 steps</span></span>
+      </div>
+      <h2 id="h-spec" class="giant" data-ink><span class="ln">Wear it.</span><span class="ln">Swap it.</span><span class="ln">Wear the</span><span class="ln">next one.</span></h2>
+    </div>
+
+    <div class="steps" data-steps>
+      <article class="step" id="s1">
+        <figure class="frame"><div class="par" data-speed=".08"><img src="step-choose.jpg" alt="Choosing pieces in the Iconec app" loading="lazy"></div>
+          <figcaption class="cap"><h3>01 Choose</h3><p>Pick up to three pieces in the app. Your plan sets how many you hold at once.</p></figcaption></figure>
+      </article>
+      <article class="step" id="s2">
+        <figure class="frame"><div class="par" data-speed=".08"><img src="member-aisha.jpg" alt="A member wearing a gold and diamond pendant and ring" loading="lazy"></div>
+          <figcaption class="cap"><h3>02 Wear</h3><p>Delivered to your door in Dubai. Keep each piece for thirty days, or extend another thirty.</p></figcaption></figure>
+      </article>
+      <article class="step" id="s3">
+        <figure class="frame"><div class="par" data-speed=".08"><img src="step-return.jpg" alt="Three diamond rings resting in a jewellery tray" loading="lazy"></div>
+          <figcaption class="cap"><h3>03 Swap</h3><p>From day two, swap for something new. We collect one and bring the next.</p></figcaption></figure>
+      </article>
+    </div>
+  </section>
+
+  <!-- collage (carat weights in the + tags are sample figures until the real ones are supplied) -->
+  <section class="sheet stone collage" id="pieces" aria-labelledby="h-pieces">
+    <div class="head">
+      <span class="tag">On rotation</span>
+      <h2 id="h-pieces" class="lede">Pieces members are wearing<br>this week</h2>
+    </div>
+    <div class="grid">
+      <div class="col">
+        <figure class="item magic" style="--i:0" data-speed=".05"><div class="frame shape-oval ar-34"><img src="piece-earrings.jpg" alt="Diamond drop earrings" loading="lazy"></div>
+          <button class="plus" type="button" aria-expanded="false" aria-label="About the drop earrings"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg></button>
+          <div class="pop" role="status"><b>Drop earrings</b><span>Pear diamonds · on rotation now</span><p class="ct num">1.20 ct total</p><a href="#get">See it in the app →</a></div></figure>
+        <figure class="item magic" style="--i:3" data-speed=".05"><div class="frame shape-rect ar-45"><img src="member-mariam.jpg" alt="Hands wearing diamond rings" loading="lazy"></div>
+          <button class="plus" type="button" aria-expanded="false" aria-label="About the stacked rings"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg></button>
+          <div class="pop" role="status"><b>Stacked rings</b><span>Worn by a member, day 12 of 30</span><p class="ct num">0.85 ct total</p><a href="#get">See it in the app →</a></div></figure>
+      </div>
+      <div class="col mid">
+        <figure class="item magic" style="--i:1" data-speed="-.03"><div class="frame shape-arch ar-34"><img src="member-reem.jpg" alt="A member wearing layered diamond necklaces" loading="lazy"></div>
+          <button class="plus" type="button" aria-expanded="false" aria-label="About the layered necklaces"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg></button>
+          <div class="pop" role="status"><b>Layered necklaces</b><span>Two pieces, one plan</span><p class="ct num">0.60 ct total</p><a href="#get">See it in the app →</a></div>
+          <figcaption>Two pieces, worn together</figcaption></figure>
+      </div>
+      <div class="col r">
+        <figure class="item magic" style="--i:2" data-speed=".09"><div class="frame shape-rect ar-23"><img src="piece-ring.jpg" alt="A knot diamond ring on slate" loading="lazy"></div>
+          <button class="plus" type="button" aria-expanded="false" aria-label="About the knot ring"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg></button>
+          <div class="pop" role="status"><b>Knot ring</b><span>Pavé diamonds · on rotation now</span><p class="ct num">0.75 ct</p><a href="#get">See it in the app →</a></div></figure>
+        <figure class="item magic" style="--i:4" data-speed=".09"><div class="frame shape-arch ar-34"><img src="piece-riviere.jpg" alt="A diamond rivière necklace on slate" loading="lazy"></div>
+          <button class="plus" type="button" aria-expanded="false" aria-label="About the rivière necklace"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg></button>
+          <div class="pop" role="status"><b>Rivière necklace</b><span>A line of diamonds · on rotation now</span><p class="ct num">4.50 ct total</p><a href="#get">See it in the app →</a></div></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- dark sheet: plans -->
+  <div class="dark-wrap">
+    <section class="sheet dark on-dark" id="plans" aria-labelledby="h-plans" data-dark>
+      <div class="plans">
+        <div class="head">
+          <span style="display:inline-flex;gap:8px;align-items:center"><span style="font-size:17px">Plans</span><span class="badge">Monthly</span></span>
+        </div>
+        <h2 id="h-plans" class="giant" data-ink><span class="ln">Never bought.</span><span class="ln">Always worn.</span></h2>
+        <div class="price" id="get">
+          <div class="seg" role="radiogroup" aria-label="Pieces at a time" data-plan>
+            <span class="thumb" aria-hidden="true"></span>
+            <button type="button" role="radio" aria-checked="true" data-price="299">1 piece</button>
+            <button type="button" role="radio" aria-checked="false" data-price="450">2 pieces</button>
+            <button type="button" role="radio" aria-checked="false" data-price="599">3 pieces</button>
+          </div>
+          <p class="amt num"><span aria-hidden="true">AED <span class="v" data-amt>299</span></span><span class="sr" aria-live="polite" data-amt-sr>AED 299 a month</span><small aria-hidden="true">a month</small></p>
+          <ul class="facts"><li>Swap from day 2</li><li>Keep it 30 days</li><li>Extend +30</li><li>Delivered in Dubai</li></ul>
+        </div>
+        <div class="ctas">
+          <a class="btn cream" href="#get"><svg viewBox="0 0 17 17" fill="currentColor" aria-hidden="true"><path d="M13.6 9c0-1.9 1.5-2.8 1.6-2.8-.9-1.3-2.3-1.5-2.8-1.5-1.2-.1-2.3.7-2.9.7-.6 0-1.5-.7-2.5-.7-1.3 0-2.5.8-3.1 1.9-1.4 2.4-.4 5.9 1 7.8.6.9 1.4 2 2.4 1.9 1 0 1.3-.6 2.5-.6s1.5.6 2.5.6c1 0 1.7-1 2.3-1.9.7-1.1 1-2.1 1-2.2 0 0-2-.8-2-3.2zM11.7 3.3c.5-.7.9-1.6.8-2.5-.8 0-1.7.5-2.3 1.2-.5.6-.9 1.5-.8 2.4.9.1 1.8-.4 2.3-1.1z"/></svg>Download on the App Store</a>
+          <a class="btn ghost" href="#how">How it works</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- marquee of members -->
+  <div class="marquee" aria-label="Members wearing Iconec pieces">
+    <div class="track">
+      <figure><img src="member-b.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="member-dana.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="table-how.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="member-layla.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="press-gulf.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="member-fatima.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="table-hero.jpg" alt="" loading="lazy"></figure>
+      <figure><img src="press-desert.jpg" alt="" loading="lazy"></figure>
+    </div>
+  </div>
+
+  <!-- get the app -->
+  <section class="appw" id="app" aria-labelledby="h-app">
+    <div class="app-sheet">
+      <h2 id="h-app">Your month,<br>in your pocket</h2>
+      <p class="lead">Choose what comes next, swap or extend, and follow each delivery to your door. All in the Iconec app.</p>
+      <div class="app-get">
+        <a class="btn" href="#app"><svg viewBox="0 0 17 17" fill="currentColor" aria-hidden="true"><path d="M13.6 9c0-1.9 1.5-2.8 1.6-2.8-.9-1.3-2.3-1.5-2.8-1.5-1.2-.1-2.3.7-2.9.7-.6 0-1.5-.7-2.5-.7-1.3 0-2.5.8-3.1 1.9-1.4 2.4-.4 5.9 1 7.8.6.9 1.4 2 2.4 1.9 1 0 1.3-.6 2.5-.6s1.5.6 2.5.6c1 0 1.7-1 2.3-1.9.7-1.1 1-2.1 1-2.2 0 0-2-.8-2-3.2zM11.7 3.3c.5-.7.9-1.6.8-2.5-.8 0-1.7.5-2.3 1.2-.5.6-.9 1.5-.8 2.4.9.1 1.8-.4 2.3-1.1z"/></svg>Download on the App Store</a>
+        <div class="qr"><img src="qr.svg" alt="QR code to download the Iconec app (placeholder)"><span>Or scan with<br>your iPhone camera</span></div>
+      </div>
+      <figure class="window" data-window><img src="passed-hero.jpg" alt="A member in a white shirt wearing a fine gold chain" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq" aria-labelledby="h-faq">
+    <div class="head">
+      <span class="tag">Questions</span>
+      <h2 id="h-faq" class="lede">Before you join</h2>
+    </div>
+    <div class="faq-list">
+      <details><summary>How does a month work?<i aria-hidden="true"></i></summary><p>Choose up to as many pieces as your plan holds. They are delivered to your door, and you wear each one for thirty days.</p></details>
+      <details><summary>When can I swap?<i aria-hidden="true"></i></summary><p>From day two. Pick the next piece in the app and we collect one and bring the other.</p></details>
+      <details><summary>Can I keep a piece longer?<i aria-hidden="true"></i></summary><p>Yes. In the last seven days of a piece's month, Extend +30 appears in the app and gives you another thirty days.</p></details>
+      <details><summary>What does it cost?<i aria-hidden="true"></i></summary><p>AED 299 a month for one piece at a time, AED 450 for two and AED 599 for three.</p></details>
+      <details><summary>Who can join, and where do you deliver?<i aria-hidden="true"></i></summary><p>Membership is by application. You verify your identity in the app, we review it, and once you are approved we deliver in Dubai at a slot you choose.</p></details>
+    </div>
+  </section>
+
+  <footer class="foot" id="gift">
+    <div class="cards">
+      <div class="card">
+        <span class="tag">Gift</span>
+        <div class="frame shape-arch"><img src="step-deliver.jpg" alt="A wrapped Iconec gift box" loading="lazy"></div>
+        <h3>Give a membership</h3>
+        <p>A value to spend on pieces, delivered as a card. They choose what to wear.</p>
+        <a class="btn" href="#get">Gift Iconec</a>
+      </div>
+      <div class="card">
+        <span class="tag">Notes</span>
+        <div class="frame shape-oval"><img src="table-app.jpg" alt="A member wearing a fine diamond chain" loading="lazy"></div>
+        <h3>New on rotation</h3>
+        <p>One short email when new pieces arrive. Nothing else.</p>
+        <form class="field" novalidate data-form>
+          <label class="sr" for="em">Email</label>
+          <input id="em" type="email" placeholder="Email address" autocomplete="email" required>
+          <button class="btn" type="submit">Subscribe</button>
+        </form>
+        <p class="form-msg" aria-live="polite" data-form-msg></p>
+      </div>
+    </div>
+    <p class="bigword" aria-hidden="true" data-bigword><span style="--i:0">I</span><span style="--i:1">C</span><span style="--i:2">O</span><span style="--i:3">N</span><span style="--i:4">E</span><span style="--i:5">C</span></p>
+    <div class="legal"><span>© 2026 Iconec, Dubai</span><nav><a href="#top">Instagram</a><a href="#top">Contact</a><a href="#top">Terms</a></nav></div>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var root=document.documentElement, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var still=/[?&]still\b/.test(location.search);
+  var clamp=function(v,a,b){return Math.min(b,Math.max(a,v))};
+
+  /* load sequence: nav, tag, line, then arches (45ms stagger) */
+  var go=function(){root.classList.add('loaded');setTimeout(function(){root.classList.add('done')},2600)};
+  if(reduce||still){root.classList.add('loaded','done')}
+  else{Promise.all([document.fonts?document.fonts.ready:0].concat([].map.call(document.querySelectorAll('.hero img[fetchpriority]'),function(i){return i.complete?0:new Promise(function(r){i.onload=i.onerror=r})}))).then(function(){requestAnimationFrame(go)});setTimeout(go,2200)}
+
+  /* hero stack: planes on a diagonal through space. phase moves them toward you: a slow drift, plus page scroll
+     and horizontal drag (with inertia that decays exponentially). On load the line glides in from the far end
+     (1.8s ease-out). Plane k sits at s = k - phase, wrapped so the line is endless. */
+  (function(){
+    var st=document.querySelector('[data-stack]'); if(!st)return;
+    var ps=[].slice.call(st.querySelectorAll('.plane')), n=ps.length;
+    var phase=0, v=0, drift=reduce?0:.0035, hover=false, drag=null, last=0, t0=performance.now(), intro=reduce||still?0:6;
+    var D={x:0,y:0,z:0}; function measure(){var m=innerWidth<=760; D=m?{x:52,y:-36,z:-150}:{x:150,y:-66,z:-200}}
+    measure(); addEventListener('resize',measure);
+    var NEAR=-3.2, FAR=n+NEAR;                       /* visible span of the line */
+    function layout(now){
+      var k0=1-Math.pow(1-Math.min(1,(now-t0)/1800),4), lead=intro*(1-k0);   /* entrance: ease-out from far away */
+      var sy=reduce?0:scrollY/260;
+      for(var i=0;i<n;i++){
+        var sv=i-phase-sy+lead; sv=((sv-NEAR)%n+n)%n+NEAR;                   /* wrap into [NEAR, FAR) */
+        var op=Math.min(1,(sv-NEAR)/1.2,(FAR-sv)/1.6); op=Math.max(0,op);
+        var x=(sv-1.2)*D.x, y=(sv-1.2)*D.y, z=(sv-1.2)*D.z;
+        ps[i].style.transform='translate3d('+x.toFixed(1)+'px,'+y.toFixed(1)+'px,'+z.toFixed(1)+'px) rotateY(24deg)';
+        ps[i].style.opacity=op.toFixed(3);
+        ps[i].style.zIndex=String(1000-Math.round(sv*10));
+      }
+    }
+    function frame(t){
+      var dt=Math.min(48,t-(last||t))/16.67; last=t;
+      if(!drag){ v+=((hover?0:drift)-v)*(1-Math.pow(.95,dt)); phase+=v*dt; }
+      layout(t); requestAnimationFrame(frame);
+    }
+    st.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')hover=true});
+    st.addEventListener('pointerleave',function(){hover=false});
+    st.addEventListener('pointerdown',function(e){drag={x:e.clientX,y:e.clientY,t:performance.now(),moved:false,id:e.pointerId};v=0});
+    addEventListener('pointermove',function(e){
+      if(!drag||e.pointerId!==drag.id)return;
+      var dx=e.clientX-drag.x;
+      if(!drag.moved){if(Math.abs(dx)<6)return; if(Math.abs(e.clientY-drag.y)>Math.abs(dx)){drag=null;return} drag.moved=true;st.classList.add('drag');try{st.setPointerCapture(e.pointerId)}catch(_){}}
+      var now=performance.now(), dt=Math.max(1,now-drag.t), d=-dx/(D.x*2.2);
+      phase+=d; v=d/dt*16.67*.9; drag.x=e.clientX; drag.t=now;
+    });
+    function end(){if(!drag)return;drag=null;st.classList.remove('drag')}
+    addEventListener('pointerup',end); addEventListener('pointercancel',end);
+    layout(performance.now()); requestAnimationFrame(frame);
+  })();
+
+  /* app photo: the arch opens from 22% inset on each side to full width as it rises through the lower half of the view */
+  (function(){
+    var w=document.querySelector('[data-window]'); if(!w)return;
+    function upd(){var r=w.getBoundingClientRect(); if(r.top>innerHeight||r.bottom<0)return;
+      var p=reduce||still?1:Math.min(1,Math.max(0,(innerHeight-r.top)/(innerHeight*.75))); var e=1-Math.pow(1-p,3);
+      w.style.setProperty('--o',(22*(1-e)).toFixed(2))}
+    addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); upd();
+  })();
+
+  /* duplicate marquee track for a seamless loop */
+  var tr=document.querySelector('.track'); tr.innerHTML+=tr.innerHTML;
+  [].forEach.call(tr.querySelectorAll('figure'),function(f,i){if(i>=8)f.setAttribute('aria-hidden','true')});
+
+  /* split inking headlines into letters */
+  var inks=[].map.call(document.querySelectorAll('[data-ink]'),function(el){
+    var cs=[];
+    [].forEach.call(el.querySelectorAll('.ln'),function(ln){
+      var words=ln.textContent.split(' '); ln.textContent='';
+      words.forEach(function(w,wi){
+        var ws=document.createElement('span'); ws.className='w';
+        for(var k=0;k<w.length;k++){var c=document.createElement('span');c.className='c';c.textContent=w[k];ws.appendChild(c);cs.push(c)}
+        ln.appendChild(ws); if(wi<words.length-1) ln.appendChild(document.createTextNode(' '));
+      });
+    });
+    el.setAttribute('aria-label',el.textContent);
+    return {el:el,cs:cs,last:-1};
+  });
+
+  var speeds=[].slice.call(document.querySelectorAll('[data-speed]'));
+  var nav=document.getElementById('nav'), darks=[].slice.call(document.querySelectorAll('[data-dark]'));
+  var vh=innerHeight;
+  addEventListener('resize',function(){vh=innerHeight;place(plan);tick()});
+
+  function tick(){
+    var y=scrollY;
+    if(!reduce&&!still){
+      /* parallax: transform only */
+      speeds.forEach(function(el){var r=el.parentNode.getBoundingClientRect(); if(r.bottom<-200||r.top>vh+200)return; var c=r.top+r.height/2-vh/2; el.style.transform='translate3d(0,'+(c*parseFloat(el.dataset.speed)).toFixed(1)+'px,0)'});
+    }
+    /* ink: letters go from .2 to 1 as the headline scrolls through */
+    inks.forEach(function(o){
+      var r=o.el.getBoundingClientRect(); if(r.bottom<0||r.top>vh)return;
+      var p=reduce||still?1:clamp((vh*.9-r.top)/(vh*.3+r.height),0,1); /* starts as the top reaches 90% of the viewport, done when the bottom reaches 60% */
+      var n=o.cs.length, f=p*(n+6);
+      if(Math.abs(f-o.last)<.05)return; o.last=f;
+      for(var i=0;i<n;i++){o.cs[i].style.opacity=(.2+.8*clamp((f-i)/6,0,1)).toFixed(3)}
+    });
+    /* nav takes the dark tone over the green sheet */
+    var over=darks.some(function(d){var r=d.getBoundingClientRect();return r.top<40&&r.bottom>40});
+    nav.classList.toggle('dark',over);
+  }
+
+  /* plan pill: thumb slides ease-out (300ms) */
+  function place(seg){var on=seg.el.querySelector('[aria-current="true"],[aria-checked="true"]');if(!on)return;seg.thumb.style.width=on.offsetWidth+'px';seg.thumb.style.transform='translateX('+on.offsetLeft+'px)'}
+  var planEl=document.querySelector('[data-plan]');
+  var plan={el:planEl,thumb:planEl.querySelector('.thumb')};
+  place(plan);
+  document.fonts&&document.fonts.ready.then(function(){place(plan)});
+
+
+  /* plan switch: only digits that change move. The old digit leaves upward in 140ms (ease-in), the new one
+     arrives from a short distance below in 220ms (ease-out, no overshoot), 20ms apart, so the price settles
+     with the pill thumb inside 300ms. Direction follows the price: up when it rises, down when it falls. */
+  var amt=document.querySelector('[data-amt]'), amtSr=document.querySelector('[data-amt-sr]'), price=299;
+  var EASE_OUT='cubic-bezier(.16,1,.3,1)', EASE_IN='cubic-bezier(.7,0,.84,0)';
+  amt.innerHTML=String(price).split('').map(function(d){return '<span class="dg"><b>'+d+'</b></span>'}).join('');
+  var slots=[].slice.call(amt.querySelectorAll('.dg'));
+  function showPrice(v){
+    var dir=v>price?1:-1, digits=String(v).split(''), k=0; price=v; amtSr.textContent='AED '+v+' a month';
+    slots.forEach(function(slot,i){
+      var bs=slot.querySelectorAll('b'), cur=bs[bs.length-1];
+      for(var j=0;j<bs.length-1;j++)bs[j].remove();           /* a fast second click drops anything still leaving */
+      if(cur.textContent===digits[i])return;
+      var nb=document.createElement('b'); nb.textContent=digits[i]; slot.appendChild(nb);
+      if(reduce||!cur.animate){cur.remove();return}
+      var delay=k++*20;
+      cur.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY('+(-dir*28)+'%)',opacity:0}],{duration:140,delay:delay,easing:EASE_IN,fill:'forwards'}).onfinish=function(){cur.remove()};
+      nb.animate([{transform:'translateY('+(dir*28)+'%)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:220,delay:delay+40,easing:EASE_OUT,fill:'backwards'});
+    });
+  }
+  [].forEach.call(planEl.querySelectorAll('button'),function(b){b.addEventListener('click',function(){
+    [].forEach.call(planEl.querySelectorAll('button'),function(x){x.setAttribute('aria-checked',x===b?'true':'false')});place(plan);
+    showPrice(+b.dataset.price);
+  })});
+
+  /* + popovers: enter 200ms ease-out, exit 160ms ease-in; one open at a time */
+  var openPop=null;
+  function closePop(){if(!openPop)return;openPop.btn.setAttribute('aria-expanded','false');openPop.pop.classList.remove('open');openPop=null}
+  [].forEach.call(document.querySelectorAll('.plus'),function(btn){var pop=btn.nextElementSibling;btn.addEventListener('click',function(e){e.stopPropagation();var was=openPop&&openPop.btn===btn;closePop();if(!was){btn.setAttribute('aria-expanded','true');pop.classList.add('open');openPop={btn:btn,pop:pop}}})});
+  document.addEventListener('click',function(e){if(openPop&&!openPop.pop.contains(e.target))closePop()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePop();closeMenu()}});
+
+  /* reveal on enter (collage rise, footer wordmark) */
+  var rio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var t=e.target;t.classList.add('in');rio.unobserve(t);if(t.classList.contains('magic'))setTimeout(function(){t.classList.add('settled')},2400)}})},{rootMargin:'0px 0px -12% 0px'});
+  [].forEach.call(document.querySelectorAll('.rise,.magic,.watch,[data-bigword]'),function(el){if(still)el.classList.add('in','settled');else rio.observe(el)});
+
+  /* mobile menu */
+  var menu=document.getElementById('menu'),mbtn=document.querySelector('[data-menu-open]');
+  function openMenu(){root.classList.add('menu-open');menu.removeAttribute('inert');mbtn.setAttribute('aria-expanded','true');setTimeout(function(){menu.querySelector('.x').focus()},30)}
+  function closeMenu(){if(!root.classList.contains('menu-open'))return;root.classList.remove('menu-open');menu.setAttribute('inert','');mbtn.setAttribute('aria-expanded','false');mbtn.focus()}
+  mbtn.addEventListener('click',openMenu);
+  [].forEach.call(document.querySelectorAll('[data-menu-close]'),function(el){el.addEventListener('click',closeMenu)});
+
+  /* newsletter: inline validation */
+  var form=document.querySelector('[data-form]'),msg=document.querySelector('[data-form-msg]');
+  form.addEventListener('submit',function(e){e.preventDefault();var v=form.em.value.trim();if(!/^\S+@\S+\.\S+$/.test(v)){msg.textContent='Enter an email like name@example.com';form.em.focus();return}msg.textContent='Thanks. We will write when new pieces arrive.';form.reset()});
+
+  /* smooth scrolling (Lenis) on fine pointers; plain scroll otherwise */
+  addEventListener('scroll',tick,{passive:true});
+  tick();
+  if(!reduce&&!still&&matchMedia('(pointer:fine)').matches&&!/[?&]nolenis\b/.test(location.search)){
+    var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js';
+    s.onload=function(){if(!window.Lenis)return;var l=new Lenis({duration:1.15,easing:function(t){return 1-Math.pow(1-t,4)},smoothWheel:true,anchors:true});window.__lenis=l;l.on('scroll',tick);(function raf(t){l.raf(t);requestAnimationFrame(raf)})(performance.now())};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
